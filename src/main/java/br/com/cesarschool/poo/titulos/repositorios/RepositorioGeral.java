@@ -4,7 +4,7 @@ import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
 
 public abstract class RepositorioGeral {
 
-    private final DAOSerializadorObjetos dao;
+    protected DAOSerializadorObjetos dao;
 
     public RepositorioGeral() {
         this.dao = new DAOSerializadorObjetos(getClasseEntidade());

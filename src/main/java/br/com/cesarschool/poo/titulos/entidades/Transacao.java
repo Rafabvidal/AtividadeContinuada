@@ -1,5 +1,6 @@
 package br.com.cesarschool.poo.titulos.entidades;
 
+import br.com.cesarschool.poo.titulos.utils.Comparavel;
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 import java.time.LocalDateTime;
@@ -74,12 +75,19 @@ public class Transacao extends Entidade {
 
     @Override
     public String getIdUnico() {
+        String idAcaoOuTitulo = (acao != null ? acao.getIdUnico() : (tituloDivida != null ? tituloDivida.getIdUnico() : ""));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String idAcaoOuTitulo = (acao != null) ? acao.getIdUnico() : tituloDivida.getIdUnico();
+        String dataHoraFormatada = dataHoraOperacao.format(formatter);
+        return entidadeCredito.getIdUnico() + "_" + entidadeDebito.getIdUnico() + "_" + idAcaoOuTitulo + "_" + dataHoraFormatada;
+    }
 
-        return entidadeCredito.getIdUnico() + "_" +
-                entidadeDebito.getIdUnico() + "_" +
-                idAcaoOuTitulo + "_" +
-                dataHoraOperacao.format(formatter);
+    @Override
+    public int comparar(Comparavel c) {
+        if (c instanceof Transacao) {
+            Transacao outraTransacao = (Transacao) c;
+            //System.out.println("hi");
+            return (this.dataHoraOperacao.compareTo(outraTransacao.dataHoraOperacao)) * - 1;
+        }
+        throw new IllegalArgumentException("O objeto comparado deve ser uma instância de Transacao.");
     }
 }

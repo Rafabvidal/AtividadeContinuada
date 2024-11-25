@@ -182,13 +182,20 @@ public class RepositorioAcao extends RepositorioGeral {
         return acoes;
     }
 
+    //public DAOSerializadorObjetos getDao() {
+    //    return new DAOSerializadorObjetos(Acao.class);
+    //}
+
+
     public DAOSerializadorObjetos getDao() {
-        return new DAOSerializadorObjetos(Acao.class);
+        return dao;
     }
 
     @Override
     public Class<?> getClasseEntidade() {
         return Acao.class;
     }
+
+
 
 }
