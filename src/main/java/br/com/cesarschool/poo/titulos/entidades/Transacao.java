@@ -1,18 +1,21 @@
 package br.com.cesarschool.poo.titulos.entidades;
+
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class Transacao extends Entidade  {
+public class Transacao extends Entidade {
 
     private EntidadeOperadora entidadeCredito;
     private EntidadeOperadora entidadeDebito;
     private Acao acao;
     private TituloDivida tituloDivida;
     private double valorOperacao;
-    private LocalDateTime dataHoraOperacao = LocalDateTime.now();
+    private LocalDateTime dataHoraOperacao;
 
-    public Transacao(EntidadeOperadora entidadeCredito, EntidadeOperadora entidadeDebito, Acao acao, TituloDivida tituloDivida, double valorOperacao, LocalDateTime dataHoraOperacao) {
+    public Transacao(EntidadeOperadora entidadeCredito, EntidadeOperadora entidadeDebito, Acao acao,
+                     TituloDivida tituloDivida, double valorOperacao, LocalDateTime dataHoraOperacao) {
         this.entidadeCredito = entidadeCredito;
         this.entidadeDebito = entidadeDebito;
         this.acao = acao;
@@ -71,9 +74,12 @@ public class Transacao extends Entidade  {
 
     @Override
     public String getIdUnico() {
-        return entidadeCredito.getIdentificador() + "-" +
-                entidadeDebito.getIdentificador() + "-" +
-                dataHoraOperacao.toString().replaceAll("[:.]", "-");
-    }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String idAcaoOuTitulo = (acao != null) ? acao.getIdUnico() : tituloDivida.getIdUnico();
 
+        return entidadeCredito.getIdUnico() + "_" +
+                entidadeDebito.getIdUnico() + "_" +
+                idAcaoOuTitulo + "_" +
+                dataHoraOperacao.format(formatter);
+    }
 }

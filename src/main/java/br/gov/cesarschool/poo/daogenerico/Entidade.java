@@ -65,7 +65,6 @@ public abstract class Entidade implements Serializable {
         this.usuarioUltimaAlteracao = usuarioUltimaAlteracao;
     }
 
-    // Método abstrato
     public abstract String getIdUnico();
 }
 

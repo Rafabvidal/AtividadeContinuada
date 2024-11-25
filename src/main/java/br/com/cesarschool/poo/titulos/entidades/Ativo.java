@@ -1,7 +1,8 @@
 package br.com.cesarschool.poo.titulos.entidades;
-import br.gov.cesarschool.poo.daogenerico.Entidade;
 
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 import java.time.LocalDate;
+
 
 public class Ativo extends Entidade {
 
@@ -9,13 +10,12 @@ public class Ativo extends Entidade {
     private String nome;
     private LocalDate dataDeValidade = LocalDate.now();
 
-    public Ativo(int identificador, String nome, LocalDate dataDeValidade){
+    public Ativo(int identificador, String nome, LocalDate dataDeValidade) {
         this.identificador = identificador;
         this.nome = nome;
         this.dataDeValidade = dataDeValidade;
     }
 
-    // apenas getIdentificador pq ele é read only externamente
     public int getIdentificador() {
         return identificador;
     }
