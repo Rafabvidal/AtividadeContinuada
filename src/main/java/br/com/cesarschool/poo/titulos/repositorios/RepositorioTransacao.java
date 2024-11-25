@@ -1,197 +1,98 @@
 package br.com.cesarschool.poo.titulos.repositorios;
 
-import br.gov.cesarschool.poo.daogenerico.DAOSerializadorObjetos;
+import br.gov.cesarschool.poo.daogenerico.Entidade;
 import br.com.cesarschool.poo.titulos.entidades.Transacao;
-import br.com.cesarschool.poo.titulos.entidades.EntidadeOperadora;
-import br.com.cesarschool.poo.titulos.entidades.Acao;
-import br.com.cesarschool.poo.titulos.entidades.TituloDivida;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public class RepositorioTransacao extends RepositorioGeral {
-    public void incluir(Transacao transacao) {
-        File arquivo = new File("Transacao.txt");
+public class RepositorioTransacao extends RepositorioGeral<Transacao> {
 
-        EntidadeOperadora entidadeCredito = transacao.getEntidadeCredito();
-        EntidadeOperadora entidadeDebito = transacao.getEntidadeDebito();
-        Acao acao = transacao.getAcao();
-        TituloDivida tituloDivida = transacao.getTituloDivida();
-        double valorOperacao = transacao.getValorOperacao();
-        LocalDateTime dataHoraOperacao = transacao.getDataHoraOperacao();
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo, true))) {
-            // entidadeCredito
-            bw.write(entidadeCredito.getIdentificador() + ";" + entidadeCredito.getNome() + ";" +
-                    entidadeCredito.getAutorizacaoAcao() + ";" + entidadeCredito.getSaldoAcao() + ";" +
-                    entidadeCredito.getSaldoTituloDivida() + ";");
-
-            // entidadeDebito
-            bw.write(entidadeDebito.getIdentificador() + ";" + entidadeDebito.getNome() + ";" +
-                    entidadeDebito.getAutorizacaoAcao() + ";" + entidadeDebito.getSaldoAcao() + ";" +
-                    entidadeDebito.getSaldoTituloDivida() + ";");
-
-            // acao
-            if (acao != null) {
-                bw.write(acao.getIdentificador() + ";" + acao.getNome() + ";" +
-                        acao.getDataDeValidade() + ";" + acao.getValorUnitario() + ";");
-            } else {
-                bw.write("null;");
-            }
-
-            // tituloDivida
-            if (tituloDivida != null) {
-                bw.write(tituloDivida.getIdentificador() + ";" + tituloDivida.getNome() + ";" +
-                        tituloDivida.getDataDeValidade() + ";" + tituloDivida.getTaxaJuros() + ";");
-            } else {
-                bw.write("null;");
-            }
-
-            // valor e data da operação
-            bw.write(valorOperacao + ";" + dataHoraOperacao);
-
-            // nova linha
-            bw.newLine();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public RepositorioTransacao() {
+        super(Transacao.class);
     }
 
-    public Transacao[] buscarPorEntidadeCredora(int identificadorEntidadeCredito) {
-        File arquivo = new File("Transacao.txt");
-        List<Transacao> transacoesEncontradas = new ArrayList<>();
+    public boolean incluir(Transacao transacao) {
+        if (buscar(transacao.getIdUnico()) != null) {
+            System.out.println("Inclusão falhou: identificador duplicado.");
+            return false;
+        }
+        transacao.setDataHoraInclusao(LocalDateTime.now());
+        return super.incluir(transacao);
+    }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
+    public boolean alterar(Transacao transacao) {
+        if (buscar(transacao.getIdUnico()) == null) {
+            System.out.println("Alteração falhou: identificador não encontrado.");
+            return false;
+        }
+        transacao.setDataHoraUltimaAlteracao(LocalDateTime.now());
+        return super.alterar(transacao);
+    }
 
-            while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(";");
+    @Override
+    public boolean excluir(String identificador) {
+        if (buscar(identificador) == null) {
+            System.out.println("Exclusão falhou: identificador não encontrado.");
+            return false;
+        }
+        return super.excluir(identificador);
+    }
 
-                // Verifique se o identificador da entidade de crédito é o primeiro
-                int idExistente = Integer.parseInt(dados[0]);
+    public Transacao buscar(String identificador) {
+        return super.buscar(identificador);
+    }
 
-                if (idExistente == identificadorEntidadeCredito) {
-                    EntidadeOperadora entidadeCredito = new EntidadeOperadora(
-                            Integer.parseInt(dados[0]), // Identificador
-                            dados[1], // Nome
-                            Boolean.parseBoolean(dados[2]) // AutorizadoAção
-                    );
+    public Transacao[] buscarPorEntidadeCredora(long identificadorEntidadeCredito) {
+        return buscarPorEntidade(identificadorEntidadeCredito, true);
+    }
 
-                    EntidadeOperadora entidadeDebito = new EntidadeOperadora(
-                            Integer.parseInt(dados[5]), // Identificador
-                            dados[6], // Nome
-                            Boolean.parseBoolean(dados[7]) // AutorizadoAção
-                    );
+    public Transacao[] buscarPorEntidadeDevedora(long identificadorEntidadeDebito) {
+        return buscarPorEntidade(identificadorEntidadeDebito, false);
+    }
 
-                    Acao acao = null;
+    private Transacao[] buscarPorEntidade(long identificadorEntidade, boolean isCredora) {
+        List<Transacao> transacoesFiltradas = new ArrayList<>();
+        Entidade[] todasEntidades = getDao().buscarTodos();
+        System.out.println("Verificando transações carregadas...");
 
-                    if (!dados[10].equals("null")) {
-                        acao = new Acao(
-                                Integer.parseInt(dados[10]), // Identificador
-                                dados[11], // Nome
-                                LocalDate.parse(dados[12]), // Data de Validade
-                                Double.parseDouble(dados[13]) // Valor Unitário
-                        );
-                    }
+        for (Entidade entidade : todasEntidades) {
+            if (entidade instanceof Transacao) {
+                Transacao transacao = (Transacao) entidade;
+                System.out.println("Transação carregada: " + transacao.getIdUnico());
 
-                    TituloDivida tituloDivida = null;
-
-                    if (!dados[14].equals("null")) {
-                        tituloDivida = new TituloDivida(
-                                Integer.parseInt(dados[14]), // Identificador
-                                dados[15], // Nome
-                                LocalDate.parse(dados[16]), // Data de Validade
-                                Double.parseDouble(dados[17]) // Taxa de Juros
-                        );
-                    }
-
-                    double valorOperacao = Double.parseDouble(dados[18]);
-                    LocalDateTime dataHoraOperacao = LocalDateTime.parse(dados[19]);
-
-                    Transacao transacao = new Transacao(entidadeCredito, entidadeDebito, acao, tituloDivida, valorOperacao, dataHoraOperacao);
-                    transacoesEncontradas.add(transacao);
+                if (isCredora && transacao.getEntidadeCredito().getIdentificador() == identificadorEntidade) {
+                    transacoesFiltradas.add(transacao);
+                } else if (!isCredora && transacao.getEntidadeDebito().getIdentificador() == identificadorEntidade) {
+                    transacoesFiltradas.add(transacao);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Transacao[0]; // Retornar um array vazio em caso de erro
         }
-        return transacoesEncontradas.toArray(new Transacao[0]);
+
+        // Ordena as transações por ID único
+        transacoesFiltradas.sort(Comparator.comparing(Transacao::getIdUnico));
+        System.out.println("Filtrando transações para identificador: " + identificadorEntidade);
+
+        return transacoesFiltradas.toArray(new Transacao[0]);
     }
 
-    public Transacao[] buscarPorEntidadeDebito(int identificadorEntidadeDebito) {
-        File arquivo = new File("Transacao.txt");
-        List<Transacao> transacoesEncontradas = new ArrayList<>();
+    public Transacao[] buscarTodas() {
+        Entidade[] todasEntidades = getDao().buscarTodos();
+        List<Transacao> transacoes = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-
-            while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(";");
-
-                int idDebitoExistente = Integer.parseInt(dados[5]);
-
-                if (idDebitoExistente == identificadorEntidadeDebito) {
-                    EntidadeOperadora entidadeCredito = new EntidadeOperadora(
-                            Integer.parseInt(dados[0]),
-                            dados[1],
-                            Boolean.parseBoolean(dados[2])
-                    );
-
-                    EntidadeOperadora entidadeDebito = new EntidadeOperadora(
-                            Integer.parseInt(dados[5]),
-                            dados[6],
-                            Boolean.parseBoolean(dados[7])
-                    );
-
-                    Acao acao = null;
-
-                    if (!dados[10].equals("null")) {
-                        acao = new Acao(
-                                Integer.parseInt(dados[10]),
-                                dados[11],
-                                LocalDate.parse(dados[12]),
-                                Double.parseDouble(dados[13])
-                        );
-                    }
-
-                    TituloDivida tituloDivida = null;
-
-                    if (!dados[14].equals("null")) {
-                        tituloDivida = new TituloDivida(
-                                Integer.parseInt(dados[14]),
-                                dados[15],
-                                LocalDate.parse(dados[16]),
-                                Double.parseDouble(dados[17])
-                        );
-                    }
-
-                    double valorOperacao = Double.parseDouble(dados[18]);
-                    LocalDateTime dataHoraOperacao = LocalDateTime.parse(dados[19]);
-
-                    Transacao transacao = new Transacao(entidadeCredito, entidadeDebito, acao, tituloDivida, valorOperacao, dataHoraOperacao);
-                    transacoesEncontradas.add(transacao);
-                }
+        for (Entidade entidade : todasEntidades) {
+            if (entidade instanceof Transacao) {
+                transacoes.add((Transacao) entidade);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Transacao[0];
         }
-        return transacoesEncontradas.toArray(new Transacao[0]);
-    }
 
-    public DAOSerializadorObjetos getDao() {
-        return new DAOSerializadorObjetos(Transacao.class);
+        return transacoes.toArray(new Transacao[0]);
     }
 
     @Override
     public Class<?> getClasseEntidade() {
         return Transacao.class;
     }
-
-
 }

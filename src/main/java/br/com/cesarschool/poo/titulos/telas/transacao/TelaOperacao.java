@@ -201,21 +201,21 @@ public class TelaOperacao {
     // Método para carregar entidades operadoras
     private EntidadeOperadora[] carregarEntidadesOperadoras() {
         RepositorioEntidadeOperadora repositorioEntidadeOperadora = new RepositorioEntidadeOperadora();
-        List<EntidadeOperadora> entidades = repositorioEntidadeOperadora.listar();
+        List<EntidadeOperadora> entidades = repositorioEntidadeOperadora.listarTodos();
         return entidades.toArray(new EntidadeOperadora[0]); // Retorna um array de EntidadeOperadora
     }
 
     // Método para carregar ações
     private Acao[] carregarAcoes() {
         RepositorioAcao repositorioAcao = new RepositorioAcao();
-        List<Acao> acoes = repositorioAcao.listar();
+        List<Acao> acoes = repositorioAcao.listarTodos();
         return acoes.toArray(new Acao[0]); // Retorna um array de Ação
     }
 
     // Método para carregar títulos de dívida
     private TituloDivida[] carregarTitulosDivida() {
         RepositorioTituloDivida repositorioTituloDivida = new RepositorioTituloDivida();
-        List<TituloDivida> titulos = repositorioTituloDivida.listar();
+        List<TituloDivida> titulos = repositorioTituloDivida.listarTodos();
         return titulos.toArray(new TituloDivida[0]); // Retorna um array de TituloDivida
     }
 }

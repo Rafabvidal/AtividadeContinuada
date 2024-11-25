@@ -223,7 +223,7 @@ public class MediatorOperacao {
     public Transacao[] gerarExtrato (int entidade){
 
         Transacao[] transacoesCredora = repositorioTransacao.buscarPorEntidadeCredora(entidade);
-        Transacao[] transacoesDebito = repositorioTransacao.buscarPorEntidadeDebito(entidade);
+        Transacao[] transacoesDebito = repositorioTransacao.buscarPorEntidadeDevedora(entidade);
 
         Transacao[] todasTransacoes = new Transacao[transacoesCredora.length + transacoesDebito.length];
 
