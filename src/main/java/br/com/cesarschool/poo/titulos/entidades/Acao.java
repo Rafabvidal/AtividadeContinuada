@@ -10,9 +10,10 @@ public class Acao extends Ativo implements Serializable {
     private double valorUnitario;
     private LocalDateTime dataHoraInclusao;
 
-    public Acao(int identificador, String nome, LocalDate dataDeValidade, double valorUnitario){
-        super(identificador,nome,dataDeValidade);
+    public Acao(int identificador, String nome, LocalDate dataDeValidade, double valorUnitario) {
+        super(identificador, nome, dataDeValidade);
         this.valorUnitario = valorUnitario;
+        this.dataHoraInclusao = LocalDateTime.now(); // Inicializa ao criar o objeto
     }
 
     public LocalDateTime getDataHoraInclusao() {
@@ -20,22 +21,25 @@ public class Acao extends Ativo implements Serializable {
     }
 
     public void setDataHoraInclusao(LocalDateTime dataHoraInclusao) {
-        this.dataHoraInclusao = dataHoraInclusao;
+        if (dataHoraInclusao != null) {
+            this.dataHoraInclusao = dataHoraInclusao;
+        }
     }
 
-    public void setValorUnitario(double valorUnitario){
-        this.valorUnitario = valorUnitario;
-    }
-
-    public double getValorUnitario(){
+    public double getValorUnitario() {
         return valorUnitario;
     }
 
-    public double calcularPrecoTransacao(double montante){
-        return montante*valorUnitario;
+    public void setValorUnitario(double valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
+    public double calcularPrecoTransacao(double montante) {
+        return montante * valorUnitario;
+    }
+
+    @Override
     public String toString() {
-        return "Valor Unitário: R$" + valorUnitario;
+        return "Valor Unitário: R$" + valorUnitario + ", Data de Inclusão: " + dataHoraInclusao;
     }
 }

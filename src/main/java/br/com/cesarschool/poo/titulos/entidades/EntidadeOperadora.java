@@ -3,37 +3,46 @@ package br.com.cesarschool.poo.titulos.entidades;
 import br.gov.cesarschool.poo.daogenerico.Entidade;
 
 public class EntidadeOperadora extends Entidade {
-
     private long identificador;
     private String nome;
-    private boolean autorizadoAcao;
+    private boolean autorizacaoAcao;
     private double saldoAcao;
     private double saldoTituloDivida;
 
-    public EntidadeOperadora(long identificador, String nome, boolean autorizadoAcao) {
+    public EntidadeOperadora(long identificador, String nome, boolean autorizacaoAcao) {
         this.identificador = identificador;
         this.nome = nome;
-        this.autorizadoAcao = autorizadoAcao;
+        this.autorizacaoAcao = autorizacaoAcao;
+    }
+
+    public EntidadeOperadora(long identificador, String nome, double autorizadoAcao) {
+        super();
+        this.identificador = identificador;
+        this.nome = nome;
     }
 
     public long getIdentificador() {
         return identificador;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    private void setIdentificador(long identificador) {
+        this.identificador = identificador;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setAutorizadoAcao(boolean autorizadoAcao) {
-        this.autorizadoAcao = autorizadoAcao;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public boolean getAutorizadoAcao() {
-        return autorizadoAcao;
+    public boolean getAutorizacaoAcao() {
+        return autorizacaoAcao;
+    }
+
+    public void setAutorizacaoAcao(boolean autorizacaoAcao) {
+        this.autorizacaoAcao = autorizacaoAcao;
     }
 
     public double getSaldoAcao() {
@@ -45,35 +54,19 @@ public class EntidadeOperadora extends Entidade {
     }
 
     public void creditarSaldoAcao(double valor) {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor a ser creditado deve ser positivo.");
-        }
         saldoAcao += valor;
     }
 
     public void debitarSaldoAcao(double valor) {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor a ser debitado deve ser positivo.");
-        }
         saldoAcao -= valor;
     }
 
     public void creditarSaldoTituloDivida(double valor) {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor a ser creditado deve ser positivo.");
-        }
         saldoTituloDivida += valor;
     }
 
     public void debitarSaldoTituloDivida(double valor) {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor a ser debitado deve ser positivo.");
-        }
         saldoTituloDivida -= valor;
-    }
-
-    public String toString() {
-        return identificador + ": " + nome + " - R$" + saldoAcao + " - R$" + saldoTituloDivida;
     }
 
     public void ajustarSaldoAcao(double saldoAcao) {

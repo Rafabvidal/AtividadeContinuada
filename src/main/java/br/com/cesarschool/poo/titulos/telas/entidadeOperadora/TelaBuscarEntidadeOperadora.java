@@ -134,7 +134,7 @@ public class TelaBuscarEntidadeOperadora{
 
     private void preencherCampos(EntidadeOperadora entidadeOperadora) {
         textoNome.setText(entidadeOperadora.getNome());
-        textoAutorizadoAcao.setText(Boolean.toString(entidadeOperadora.getAutorizadoAcao()));
+        textoAutorizadoAcao.setText(Boolean.toString(entidadeOperadora.getAutorizacaoAcao()));
         textoSaldoAcao.setText(Double.toString(entidadeOperadora.getSaldoAcao()));
         textoSaldoTituloDivida.setText(Double.toString(entidadeOperadora.getSaldoTituloDivida()));
     }

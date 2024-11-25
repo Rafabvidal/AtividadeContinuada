@@ -144,12 +144,12 @@ public class MediatorOperacao {
         }
 
         //4
-        if(ehAcao && !entidadeCredito.getAutorizadoAcao()){
+        if(ehAcao && !entidadeCredito.getAutorizacaoAcao()){
             return "Entidade de crédito não autorizada para ação";
         }
 
         //5
-        if(ehAcao && !entidadeDebito.getAutorizadoAcao()){
+        if(ehAcao && !entidadeDebito.getAutorizacaoAcao()){
             return "Entidade de débito não autorizada para ação";
         }
 

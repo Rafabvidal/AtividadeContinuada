@@ -26,12 +26,12 @@ public class RepositorioTransacao extends RepositorioGeral {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo, true))) {
             // entidadeCredito
             bw.write(entidadeCredito.getIdentificador() + ";" + entidadeCredito.getNome() + ";" +
-                    entidadeCredito.getAutorizadoAcao() + ";" + entidadeCredito.getSaldoAcao() + ";" +
+                    entidadeCredito.getAutorizacaoAcao() + ";" + entidadeCredito.getSaldoAcao() + ";" +
                     entidadeCredito.getSaldoTituloDivida() + ";");
 
             // entidadeDebito
             bw.write(entidadeDebito.getIdentificador() + ";" + entidadeDebito.getNome() + ";" +
-                    entidadeDebito.getAutorizadoAcao() + ";" + entidadeDebito.getSaldoAcao() + ";" +
+                    entidadeDebito.getAutorizacaoAcao() + ";" + entidadeDebito.getSaldoAcao() + ";" +
                     entidadeDebito.getSaldoTituloDivida() + ";");
 
             // acao

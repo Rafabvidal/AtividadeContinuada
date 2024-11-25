@@ -18,7 +18,7 @@ public class RepositorioEntidadeOperadora extends RepositorioGeral {
 
         try (BufferedWriter escritor = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             String linha = entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" +
-                    entidadeOperadora.getAutorizadoAcao() + ";" + entidadeOperadora.getSaldoAcao() + ";" +
+                    entidadeOperadora.getAutorizacaoAcao() + ";" + entidadeOperadora.getSaldoAcao() + ";" +
                     entidadeOperadora.getSaldoTituloDivida();
             escritor.write(linha);
             escritor.newLine();
@@ -38,7 +38,7 @@ public class RepositorioEntidadeOperadora extends RepositorioGeral {
             if (Long.parseLong(divisao[0]) == entidadeOperadora.getIdentificador()) {
                 // Substitui a linha correspondente
                 String novaLinha = entidadeOperadora.getIdentificador() + ";" + entidadeOperadora.getNome() + ";" +
-                        entidadeOperadora.getAutorizadoAcao() + ";" + entidadeOperadora.getSaldoAcao() + ";" +
+                        entidadeOperadora.getAutorizacaoAcao() + ";" + entidadeOperadora.getSaldoAcao() + ";" +
                         entidadeOperadora.getSaldoTituloDivida();
                 linhas.set(i, novaLinha);
                 alterado = true;

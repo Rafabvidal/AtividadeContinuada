@@ -6,7 +6,7 @@ import br.gov.cesarschool.poo.daogenerico.Entidade;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Transacao extends Entidade {
+public class Transacao extends Entidade implements Comparavel{
 
     private EntidadeOperadora entidadeCredito;
     private EntidadeOperadora entidadeDebito;
